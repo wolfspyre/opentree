@@ -1,0 +1,64 @@
+version: '2.4'
+networks:
+  opentree:
+    driver: bridge
+    driver_opts:
+      enable_icc: "true"
+      host_binding_ipv4: "192.0.2.81"
+      com.docker.network.bridge.enable_ip_masquerade: "true"
+      com.docker.network.enable_ipv4: "true"
+      com.docker.network.bridge.enable_icc: "true"
+      com.docker.network.bridge.host_binding_ipv4: "192.0.2.81"
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.81.0/24
+          gateway: 10.2.81.1
+#networks:
+  # https://docs.docker.com/compose/networking/#configuring-the-default-network
+#  openTreeNet:
+#    driver: 'macvlan'
+#    driver_opts:
+#      parent: 'gitlab_gitlabNET'
+#      #parent: 'bond0.40'
+#    ipam:
+#      config:
+#        - subnet: '198.18.40.0/24'
+#    #      gateway: '198.18.40.1'
+#          ip_range: '198.18.40.45/30'
+#networks:
+#  openTreeNet:
+#    driver: bridge
+#    driver_opts:
+#      enable_icc: "true"
+#      host_binding_ipv4: "198.18.40.45"
+#      com.docker.network.bridge.enable_ip_masquerade: "true"
+#      com.docker.network.enable_ipv4: "true"
+#      com.docker.network.bridge.enable_icc: "true"
+#      com.docker.network.bridge.host_binding_ipv4: "198.18.40.45"
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: 10.40.45.0/24
+#          gateway: 10.40.45.1
+
+services:
+  opentree:
+    build: .
+    container_name: 'opentree'
+    environment:
+      COLLECTD_DOCKER_APP: 'opentree'
+      COLLECTD_DOCKER_TASK: 'opentree'
+    hostname: 'opentree'
+    domainname: 'wolfspyre.io'
+    #dns: 198.18.40.1
+    dns_search: 'wolfspyre.io'
+    networks:
+      opentree:
+   #   openTreeNet:
+        ipv4_address:  10.2.81.41
+        #198.18.40.45
+    #    ipv4_address: 10.40.45.10
+    ports:
+      - '8080:8080'
+      - '80:8080'
